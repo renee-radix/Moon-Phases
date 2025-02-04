@@ -169,7 +169,36 @@ function draw() {
       }
     }
   }    
-  console.log(moonPhase);
+  console.log(mouseY);
+
+  //Drawing the moon 
+  fill(209, 174, 0, 190);
+  ellipse(300, 125, 200, 200);
+
+
+  fill(90 , 90, 90, 100);
+  noStroke();
+  ellipse(322, 75, 30, 30);
+  ellipse(228, 160, 25, 25);
+  ellipse(372, 123, 30, 30);
+  
+  fill(90, 90, 90, 110);
+  ellipse(250, 65, 35, 35);
+  ellipse(320, 177, 40, 40);
+
+  fill(90 , 90, 90, 80);
+  ellipse(372, 174, 10, 10);
+  ellipse(220, 120, 10, 10);
+  ellipse(370, 88, 10, 10);
+  ellipse(280, 93, 10, 10);
+  ellipse(276, 153, 10, 10);
+  ellipse(278, 203, 10, 10);
+
+  //obscuring ellipse down here, position changes depending on clockhand
+  obscureMoon(moonPhase);
+
+
+  //underneath that there are stars
 
 
   
@@ -179,6 +208,20 @@ function draw() {
 
 }
 
+function obscureMoon(phase){
+  fill(0, 255);
+  if(phase < 15){
+    let ellipsePos = map(phase, 0, 15, 315, 87);
+    ellipse(ellipsePos, 125, 200, 200);
+  }
+  if(phase > 15){
+    let ellipsePos = map(phase, 15, 30, 503, 301);
+    ellipse(ellipsePos, 125, 200, 200);
+  }
+
+
+
+}
 
 class ClockPoint{
 
@@ -194,5 +237,13 @@ class ClockPoint{
     line(this.x, this.y, this.x / 1.1, this.y / 1.1);
   }
 }
+
+// class Star{
+//   constructor(){
+//     this.x = random(width);
+//     this.y = random(335);
+//   }
+
+// }
 
 // On my computer window width and height when I'm doing it in side by side mode is 708 and 697 respectively
