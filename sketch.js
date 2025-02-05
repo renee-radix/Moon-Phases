@@ -49,6 +49,49 @@ function draw() {
   ellipse(0, (height/20) * -1, 100, 100);
   pop();
 
+    // riv: numerals on clockface
+    textFont('Times New Roman');
+    textStyle(BOLD);
+    textSize(60);
+    fill(50);
+
+    push();
+    translate(83, 571.5);
+    rotate(radians(100));
+    text('I', 0, 0);
+    pop()
+    
+    push();
+    translate(137, 548);
+    rotate(radians(300));
+    text('V', 0, 0);
+    pop()
+
+    push();
+    translate(194, 479);
+    rotate(radians(325));
+    text('X', 0, 0);
+    pop()
+
+    textSize(55);
+    push();
+    translate(255, 446);
+    text('XV', 0, 0);
+    pop()
+
+    push();
+    translate(349, 452);
+    rotate(radians(30));
+    text('XX', 0, 0);
+    pop()
+
+    textSize(50);
+    push();
+    translate(423, 500);
+    rotate(radians(60));
+    text('XXV', 0, 0);
+    pop()
+
   // Connecting mouseXDegrees to the value that is going to be passed to Function
   if (mouseXDegrees >= 185 && mouseXDegrees < 187){
     moonPhase = 1
@@ -169,7 +212,8 @@ function draw() {
       }
     }
   }    
-  console.log(mouseY);
+  console.log("Mouse Y: " + mouseY);
+  console.log("Mouse X: " + mouseX);
 
   //Drawing the moon 
   fill(209, 174, 0, 190);
@@ -198,14 +242,10 @@ function draw() {
   obscureMoon(moonPhase);
 
 
-  //underneath that there are stars
-
-
-  
-
-  // Range for points around circle in degrees: 186 to 354 (a range of 168 degrees)
-  // To have 30 stages for that we'd need to increment by 5.6 each time
-
+  //underneath that there are stars, create some logic that means they can't spawn in the bounding box of the moon and make sure they're all above the clock
+  // (so like "if X is less than blank and more than blank, and Y is less than blank and more than blank, make 100% transparent")
+  // the stars in general are more transparent if the moon is "brighter", so as a whole they have a colour that's hooked up to the alpha value of the stars
+  // there should also be a way to make the stars blink 
 }
 
 function obscureMoon(phase){
@@ -245,5 +285,3 @@ class ClockPoint{
 //   }
 
 // }
-
-// On my computer window width and height when I'm doing it in side by side mode is 708 and 697 respectively
