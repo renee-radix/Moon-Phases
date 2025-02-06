@@ -1,10 +1,16 @@
 // Global variables 
-
 let clockPoints = [];
 let moonPhase = 0;
+let stars = [];
+let numberOfStars = 1000;
 
 function setup(){
   createCanvas(600, 600);
+
+  // Initializing stars array
+  for (let i = 0; i < numberOfStars; i++) {
+    stars.push(new Star());
+  }
 
   // creating locations for clock points
   const radius = width/2.22;
@@ -18,9 +24,10 @@ function setup(){
 function draw() {
   background(0);
 
-  const radius = width/2.22; // needs to be declared twice because it depends on the width being set
+  //setting width of clock circle
+  const radius = width/2.22; 
 
-  //sundial circles
+  //drawing circles for clock
   push();
   translate(width/2, height*1.03);
   stroke(102, 100, 97);
@@ -49,7 +56,7 @@ function draw() {
   ellipse(0, (height/20) * -1, 100, 100);
   pop();
 
-    // riv: numerals on clockface
+    // numerals on clockface
     textFont('Times New Roman');
     textStyle(BOLD);
     textSize(60);
@@ -87,7 +94,7 @@ function draw() {
 
     textSize(50);
     push();
-    translate(423, 500);
+    translate(428, 510);
     rotate(radians(60));
     text('XXV', 0, 0);
     pop()
@@ -212,8 +219,6 @@ function draw() {
       }
     }
   }    
-  console.log("Mouse Y: " + mouseY);
-  console.log("Mouse X: " + mouseX);
 
   //Drawing the moon 
   fill(209, 174, 0, 190);
@@ -225,7 +230,7 @@ function draw() {
   ellipse(322, 75, 30, 30);
   ellipse(228, 160, 25, 25);
   ellipse(372, 123, 30, 30);
-  
+
   fill(90, 90, 90, 110);
   ellipse(250, 65, 35, 35);
   ellipse(320, 177, 40, 40);
@@ -241,13 +246,13 @@ function draw() {
   //obscuring ellipse down here, position changes depending on clockhand
   obscureMoon(moonPhase);
 
-
-  //underneath that there are stars, create some logic that means they can't spawn in the bounding box of the moon and make sure they're all above the clock
-  // (so like "if X is less than blank and more than blank, and Y is less than blank and more than blank, make 100% transparent")
-  // the stars in general are more transparent if the moon is "brighter", so as a whole they have a colour that's hooked up to the alpha value of the stars
-  // there should also be a way to make the stars blink 
+  // displaying stars[]
+  for (let i = 0; i <numberOfStars; i++) {
+    stars[i].display();
+  }
 }
 
+//function for the moon to cycle through its phases
 function obscureMoon(phase){
   fill(0, 255);
   if(phase < 15){
@@ -263,8 +268,8 @@ function obscureMoon(phase){
 
 }
 
+// clockpoint class
 class ClockPoint{
-
   constructor(x, y){
     this.x = x;
     this.y = y;
@@ -278,10 +283,61 @@ class ClockPoint{
   }
 }
 
-// class Star{
-//   constructor(){
-//     this.x = random(width);
-//     this.y = random(335);
-//   }
+//star class
+class Star{
+  constructor(){
+    this.x = random(width);
+    this.y = random(height);
+    this.rotation = random(360);
+    this.alpha = random (100, 250);
+    this.glowFact = random(10);
+    this.bright = true;
+  }
 
-// }
+  display(){
+
+    //If the star generates in a space occupied by the clock or moon make it totally trasparent
+    if((this.x > 22 && this.x < 578 && this.y > 500) || (this.x > 41 && this.x < 550 && this.y > 480)
+    || (this.x > 51 && this.x < 530 && this.y > 460) || (this.x > 71 && this.x < 510 && this.y > 440)
+    || (this.x > 91 && this.x < 490 && this.y >420) || (this.x > 111 && this.x < 460 && this.y > 400)
+    || (this.x > 131 && this.x < 440 && this.y > 380) || (this.x > 151 && this.x < 420 && this.y > 360)
+    || (this.x > 171 && this.x < 400 && this.y > 340)) {
+      this.alpha = 0
+    }
+    
+    fill(255, this.alpha);
+    noStroke();
+    push();
+    translate(this.x, this.y);
+    rotate(radians(this.rotation));
+    triangle(0, 0, 2, 0, 2, 2);
+    pop();
+
+    // brightness (alpha value) dependant on moon phase (less bright when the moon is fuller)
+    let upperBrightnessLeft = map(moonPhase, 1, 15, 255, 50);
+    let upperBrightnessRight = map(moonPhase, 16, 30, 50, 255);
+
+    // Logic to make the stars blink
+    if(this.bright == true){
+      this.alpha = this.alpha - this.glowFact;
+    }
+
+    if(this.bright == false){
+      this.alpha = this.alpha + this.glowFact;
+    }
+
+    if(this.alpha < 30 && this.alpha > 5){
+      this.bright = false;
+    }
+
+    if(moonPhase <= 15){
+      if(this.alpha > upperBrightnessLeft){
+        this.bright = true;
+      }
+    }else{
+      if(this.alpha > upperBrightnessRight){
+        this.bright = true;
+      }
+    }
+  }
+}
